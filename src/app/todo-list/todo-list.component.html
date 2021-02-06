@@ -1,1 +1,13 @@
-<p>todo-list works!</p>
+<button (click)="onAdd()">Add</button>
+<button (click)="onUpdate()">Update</button>
+
+<ul id="todo-list">
+    <li *ngFor="let task of todoService.tasks | async" >
+        <input type="checkbox" [checked]="task.done" (change)="toggleTask(task)">
+        <label>{{task.description}}</label>
+        <!-- <label style="cursor: pointer;" (click)="">edit</label> -->
+
+    </li>
+</ul>
+
+
