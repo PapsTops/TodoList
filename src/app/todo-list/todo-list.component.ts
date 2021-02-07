@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { Todo } from '../models/task';
+import { FormBuilder, Validators } from '@angular/forms';
+import { Todo } from '../models/todo';
 import { TodoService } from '../todo.service';
 
 @Component({
@@ -9,28 +10,38 @@ import { TodoService } from '../todo.service';
 })
 export class TodoListComponent implements OnInit {
 
-  private _currentItemToUpdate: Todo | undefined;
+  constructor(
+    private fb: FormBuilder,
+    public todoService: TodoService) { }
 
-  constructor(public todoService: TodoService) { }
+
+  todoForm = this.fb.group({
+    description: ['', Validators.required]
+  })
 
   ngOnInit(): void {
-    this.todoService.tasks.subscribe(tasks => {
+    this.todoService.todos.subscribe(tasks => {
       console.log(tasks)
     })
   }
 
-  onAdd() {
-    this.todoService.addTask(new Todo("test")).subscribe()
-  }
 
-  onUpdate() {
-    if (this._currentItemToUpdate == undefined) return;
-
-    this.todoService.updateTask(this._currentItemToUpdate).subscribe();
-    this._currentItemToUpdate = undefined;
+  onUpdate(todo: Todo) {
+    this.todoService.updateTodo(todo).subscribe();
   }
 
   toggleTask(task: Todo) {
-    this.todoService.toggleTask(task).subscribe();
+    this.todoService.toggleTodo(task).subscribe();
   }
+
+  onDelete(todo: Todo) {
+    this.todoService.deleteTodo(todo).subscribe();
+  }
+
+  onSubmit() {
+    const description: string = this.todoForm.get("description")?.value;
+    this.todoService.addTodo(new Todo(description)).subscribe();
+    this.todoForm.reset()
+  }
+
 }

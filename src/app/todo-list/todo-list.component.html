@@ -1,12 +1,19 @@
-<button (click)="onAdd()">Add</button>
-<button (click)="onUpdate()">Update</button>
+<!-- <button (click)="onAdd()">Add</button>
+<button (click)="onUpdate()">Update</button> -->
+
+<form [formGroup]="todoForm" (ngSubmit)="onSubmit()">
+  <input type="text" formControlName="description">
+  <button type="submit" [disabled]="!todoForm.valid">Submit</button>
+  <div *ngIf="todoForm.controls['description'].errors?.required && !todoForm.controls['description'].pristine">
+    Please enter todo!
+  </div>
+</form>
 
 <ul id="todo-list">
-    <li *ngFor="let task of todoService.tasks | async" >
-        <input type="checkbox" [checked]="task.done" (change)="toggleTask(task)">
-        <label>{{task.description}}</label>
-        <!-- <label style="cursor: pointer;" (click)="">edit</label> -->
-
+    <li *ngFor="let todo of todoService.todos | async" >
+        <app-todo-item [todo]="todo"
+          (todoUpdatedEvent)="onUpdate($event)"
+          (todoDeletedEvent)="onDelete($event)"></app-todo-item>
     </li>
 </ul>
 

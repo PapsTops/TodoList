@@ -1,1 +1,11 @@
-<p>todo works!</p>
+<div *ngIf="canEdit">
+  <input type="text" [formControl]="description">
+  <button (click)="onUpdate()">Update</button>
+</div>
+
+
+<div *ngIf="!canEdit">
+  <label>{{ todo.description }}</label>
+  <button (click)="onEdit()">edit</button>
+  <button (click)="onDelete()">delete</button>
+</div>

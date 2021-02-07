@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { Todo } from './models/task';
+import { Todo } from './models/todo';
 
 @Injectable({
   providedIn: 'root'
@@ -9,10 +9,10 @@ export class TodoService implements ITodoService {
 
   private _todos: BehaviorSubject<Todo[]> = new BehaviorSubject([] as Todo[]);
 
-  public readonly tasks: Observable<Todo[]> = this._todos.asObservable();
+  public readonly todos: Observable<Todo[]> = this._todos.asObservable();
 
 
-  addTask(todo: Todo) {
+  addTodo(todo: Todo) {
 
     const addTaskObservable = new Observable<void>((_) => {
 
@@ -28,15 +28,15 @@ export class TodoService implements ITodoService {
 
   };
 
-  deleteTask(task: Todo) {
+  deleteTodo(todo: Todo) {
 
     const deleteObservable = new Observable<void>((_) => {
 
-      let { index, todos } = this.getTaskIndex(task);
+      let { index, todos } = this.getTaskIndex(todo);
 
       if (index < 0) return;
 
-      todos = this._todos.getValue().splice(index, 1);
+      todos.splice(index, 1);
 
       this._todos.next(todos);
 
@@ -46,7 +46,7 @@ export class TodoService implements ITodoService {
 
   };
 
-  getTask(id: string) {
+  getTodo(id: string) {
 
     const getItemObservable = new Observable<Todo>((observer) => {
 
@@ -65,11 +65,11 @@ export class TodoService implements ITodoService {
   };
 
 
-  toggleTask(task: Todo) {
+  toggleTodo(todo: Todo) {
 
     const toggleTaskObservable = new Observable<void>(() => {
 
-      const { index, todos } = this.getTaskIndex(task);
+      const { index, todos } = this.getTaskIndex(todo);
 
       if (index < 0) return;
 
@@ -83,15 +83,15 @@ export class TodoService implements ITodoService {
   }
 
 
-  updateTask(task: Todo) {
+  updateTodo(todo: Todo) {
 
     const updateTaskObservable = new Observable<void>(() => {
 
-      const { index, todos } = this.getTaskIndex(task);
+      const { index, todos } = this.getTaskIndex(todo);
 
       if (index < 0) return;
 
-      todos[index] = task;
+      todos[index] = todo;
 
       this._todos.next(todos);
 
@@ -112,10 +112,9 @@ export class TodoService implements ITodoService {
 
 
 export interface ITodoService {
-  addTask: (todo: Todo) => Observable<void>;
-  deleteTask: (todo: Todo) => Observable<void>;
-  updateTask: (todo: Todo) => Observable<void>;
-  getTask: (id: string) => Observable<Todo>;
-  toggleTask: (todo
-    : Todo) => Observable<void>;
+  addTodo: (todo: Todo) => Observable<void>;
+  deleteTodo: (todo: Todo) => Observable<void>;
+  updateTodo: (todo: Todo) => Observable<void>;
+  getTodo: (id: string) => Observable<Todo>;
+  toggleTodo: (todo: Todo) => Observable<void>;
 }
