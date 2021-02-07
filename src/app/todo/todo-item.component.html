@@ -5,6 +5,7 @@
 
 
 <div *ngIf="!canEdit">
+  <input type="checkbox" [checked]="todo.done" (change)="onUpdate()" >
   <label>{{ todo.description }}</label>
   <button (click)="onEdit()">edit</button>
   <button (click)="onDelete()">delete</button>

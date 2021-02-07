@@ -14,13 +14,15 @@ export class TodoService implements ITodoService {
 
   addTodo(todo: Todo) {
 
-    const addTaskObservable = new Observable<void>((_) => {
+    const addTaskObservable = new Observable<void>((observer) => {
 
       const currentValue = this._todos.getValue();
 
       currentValue.push(todo);
 
       this._todos.next(currentValue);
+
+      observer.next();
 
     });
 
@@ -30,7 +32,7 @@ export class TodoService implements ITodoService {
 
   deleteTodo(todo: Todo) {
 
-    const deleteObservable = new Observable<void>((_) => {
+    const deleteObservable = new Observable<void>((observer) => {
 
       let { index, todos } = this.getTaskIndex(todo);
 
@@ -40,6 +42,7 @@ export class TodoService implements ITodoService {
 
       this._todos.next(todos);
 
+      observer.next();
     });
 
     return deleteObservable;
@@ -67,7 +70,7 @@ export class TodoService implements ITodoService {
 
   toggleTodo(todo: Todo) {
 
-    const toggleTaskObservable = new Observable<void>(() => {
+    const toggleTaskObservable = new Observable<void>((observer) => {
 
       const { index, todos } = this.getTaskIndex(todo);
 
@@ -76,6 +79,8 @@ export class TodoService implements ITodoService {
       todos[index].done = !todos[index].done;
 
       this._todos.next(todos);
+
+      observer.next()
     });
 
 
@@ -85,7 +90,7 @@ export class TodoService implements ITodoService {
 
   updateTodo(todo: Todo) {
 
-    const updateTaskObservable = new Observable<void>(() => {
+    const updateTaskObservable = new Observable<void>((observer) => {
 
       const { index, todos } = this.getTaskIndex(todo);
 
@@ -94,6 +99,8 @@ export class TodoService implements ITodoService {
       todos[index] = todo;
 
       this._todos.next(todos);
+
+      observer.next()
 
     });
 

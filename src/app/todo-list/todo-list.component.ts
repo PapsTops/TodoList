@@ -20,27 +20,31 @@ export class TodoListComponent implements OnInit {
   })
 
   ngOnInit(): void {
-    this.todoService.todos.subscribe(tasks => {
-      console.log(tasks)
-    })
   }
 
-
   onUpdate(todo: Todo) {
-    this.todoService.updateTodo(todo).subscribe();
+    this.todoService.updateTodo(todo).subscribe(() => {
+      console.log("Update todo!")
+    });
   }
 
   toggleTask(task: Todo) {
-    this.todoService.toggleTodo(task).subscribe();
+    this.todoService.toggleTodo(task).subscribe(() => {
+      console.log("Toggled todo!")
+    });
   }
 
   onDelete(todo: Todo) {
-    this.todoService.deleteTodo(todo).subscribe();
+    this.todoService.deleteTodo(todo).subscribe(() => {
+      console.log("Deleted todo!")
+    });
   }
 
   onSubmit() {
     const description: string = this.todoForm.get("description")?.value;
-    this.todoService.addTodo(new Todo(description)).subscribe();
+    this.todoService.addTodo(new Todo(description)).subscribe(() => {
+      console.log("Successfully added new todo!")
+    });
     this.todoForm.reset()
   }
 
