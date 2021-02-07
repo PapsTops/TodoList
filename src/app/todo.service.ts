@@ -3,19 +3,15 @@ import { BehaviorSubject, Observable } from 'rxjs';
 import { Todo } from './models/todo';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class TodoService implements ITodoService {
-
   private _todos: BehaviorSubject<Todo[]> = new BehaviorSubject([] as Todo[]);
 
   public readonly todos: Observable<Todo[]> = this._todos.asObservable();
 
-
-  addTodo(todo: Todo) {
-
+  addTodo(todo: Todo): Observable<void> {
     const addTaskObservable = new Observable<void>((observer) => {
-
       const currentValue = this._todos.getValue();
 
       currentValue.push(todo);
@@ -23,20 +19,18 @@ export class TodoService implements ITodoService {
       this._todos.next(currentValue);
 
       observer.next();
-
     });
 
     return addTaskObservable;
+  }
 
-  };
-
-  deleteTodo(todo: Todo) {
-
+  deleteTodo(todo: Todo): Observable<void> {
     const deleteObservable = new Observable<void>((observer) => {
+      const { index, todos } = this.getTaskIndex(todo);
 
-      let { index, todos } = this.getTaskIndex(todo);
-
-      if (index < 0) return;
+      if (index < 0) {
+        return;
+      }
 
       todos.splice(index, 1);
 
@@ -46,77 +40,69 @@ export class TodoService implements ITodoService {
     });
 
     return deleteObservable;
+  }
 
-  };
-
-  getTodo(id: string) {
-
+  getTodo(id: string): Observable<Todo> {
     const getItemObservable = new Observable<Todo>((observer) => {
-
-      const todo = this._todos.getValue().find(x => x._id === id);
+      const todo = this._todos.getValue().find((x) => x._id === id);
 
       if (todo == undefined) {
-        observer.error(`Can't find todo with id of "${id}"`)
+        observer.error(`Can't find todo with id of "${id}"`);
       } else {
         observer.next(todo);
       }
-
     });
 
     return getItemObservable;
+  }
 
-  };
-
-
-  toggleTodo(todo: Todo) {
-
+  toggleTodo(todo: Todo): Observable<void> {
     const toggleTaskObservable = new Observable<void>((observer) => {
-
       const { index, todos } = this.getTaskIndex(todo);
 
-      if (index < 0) return;
+      if (index < 0) {
+        return;
+      }
 
       todos[index].done = !todos[index].done;
 
       this._todos.next(todos);
 
-      observer.next()
+      observer.next();
     });
-
 
     return toggleTaskObservable;
   }
 
-
-  updateTodo(todo: Todo) {
-
+  updateTodo(todo: Todo): Observable<void> {
     const updateTaskObservable = new Observable<void>((observer) => {
-
       const { index, todos } = this.getTaskIndex(todo);
 
-      if (index < 0) return;
+      if (index < 0) {
+        return;
+      }
 
       todos[index] = todo;
 
       this._todos.next(todos);
 
-      observer.next()
-
+      observer.next();
     });
 
     return updateTaskObservable;
-
   }
 
-
-  private getTaskIndex(todo: Todo) {
+  private getTaskIndex(
+    todo: Todo
+  ): {
+    index: number;
+    todos: Todo[];
+  } {
     const todos = this._todos.getValue();
-    const index = todos.findIndex(x => todo._id === x._id);
+    const index = todos.findIndex((x) => todo._id === x._id);
     return { index, todos };
   }
-
 }
-
 
 export interface ITodoService {
   addTodo: (todo: Todo) => Observable<void>;

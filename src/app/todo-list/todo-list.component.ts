@@ -17,33 +17,33 @@ export class TodoListComponent implements OnInit {
 
   todoForm = this.fb.group({
     description: ['', Validators.required]
-  })
+  });
 
   ngOnInit(): void {
   }
 
-  onUpdate(todo: Todo) {
+  onUpdate(todo: Todo): void {
     this.todoService.updateTodo(todo).subscribe(() => {
-      console.log("Update todo!")
+      console.log('Update todo!');
     });
   }
 
-  toggleTask(task: Todo) {
+  toggleTask(task: Todo): void {
     this.todoService.toggleTodo(task).subscribe(() => {
-      console.log("Toggled todo!")
+      console.log('Toggled todo!');
     });
   }
 
-  onDelete(todo: Todo) {
+  onDelete(todo: Todo): void {
     this.todoService.deleteTodo(todo).subscribe(() => {
-      console.log("Deleted todo!")
+      console.log('Deleted todo!');
     });
   }
 
-  onSubmit() {
-    const description: string = this.todoForm.get("description")?.value;
+  onSubmit(): void {
+    const description: string = this.todoForm.get('description')?.value;
     this.todoService.addTodo(new Todo(description)).subscribe(() => {
-      console.log("Successfully added new todo!")
+      console.log('Successfully added new todo!');
     });
     this.todoForm.reset()
   }

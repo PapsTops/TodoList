@@ -18,7 +18,7 @@ export class TodoItemComponent implements OnInit {
   @Output()
   todoDeletedEvent = new EventEmitter<Todo>();
 
-  canEdit: boolean = false;
+  canEdit = false;
   description = new FormControl('');
 
   constructor() { }
@@ -27,17 +27,17 @@ export class TodoItemComponent implements OnInit {
     this.description.setValue(this.todo.description);
   }
 
-  onUpdate() {
+  onUpdate(): void {
     this.todo.description = this.description.value;
     this.todoUpdatedEvent.emit(this.todo);
     this.canEdit = false;
   }
 
-  onEdit() {
+  onEdit(): void {
     this.canEdit = true;
   }
 
-  onDelete() {
+  onDelete(): void {
     this.todoDeletedEvent.emit(this.todo);
   }
 
